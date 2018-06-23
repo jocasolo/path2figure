@@ -1,7 +1,5 @@
 package es.jocasolo.path2figure;
 
-import java.util.List;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -17,6 +15,8 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class MyStage extends Stage implements Screen, Disposable {
 	
+	private final static float PPM = 100f;
+	
 	private Box2DDebugRenderer debugRenderer;
 	private World world;
 	
@@ -24,7 +24,7 @@ public class MyStage extends Stage implements Screen, Disposable {
 	private MyInputProcessor input;
 
 	public MyStage() {
-		super(new StretchViewport(Gdx.graphics.getWidth()/100, Gdx.graphics.getHeight()/100,
+		super(new StretchViewport(Gdx.graphics.getWidth()/PPM, Gdx.graphics.getHeight()/PPM,
 				new OrthographicCamera()));
 	}
 
@@ -35,11 +35,13 @@ public class MyStage extends Stage implements Screen, Disposable {
 		world = new World(new Vector2(0, -10), true); 
 		debugRenderer = new Box2DDebugRenderer();
 		
+		renderer = new ShapeRenderer();
+		
+		// Create ground
 		BoxBodyBuilder builder = new BoxBodyBuilder(world);
 		builder.createStaticSquare(10f, 0.1f, 0, 0);
-		builder.createDynamicCircle(0.5f, 0.5f, 0.5f, 0.2f, 1, 1, false);
 		
-		renderer = new ShapeRenderer();
+		// Sets the input processor
 		input = new MyInputProcessor(world, getCamera());
 		Gdx.input.setInputProcessor(input);
 		
@@ -47,8 +49,7 @@ public class MyStage extends Stage implements Screen, Disposable {
 	@Override
 	public void act(float delta) {
 		// Box2D step
-		world.step(1/240f, 6, 2);
-		
+		world.step(1/60f, 6, 2);
 		super.act(delta);
 	}
 	
@@ -78,25 +79,21 @@ public class MyStage extends Stage implements Screen, Disposable {
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void pause() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resume() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void hide() {
 		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

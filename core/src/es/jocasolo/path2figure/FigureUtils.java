@@ -12,14 +12,10 @@ public class FigureUtils {
 		float height = vertices.get(0).y - vertices.get(1).y;
 		if(width < 0) width *= -1;
 		if(height < 0) height *= -1;
-		System.out.println(vertices);
-		System.out.println(width);
-		System.out.println(height);
 		return new Vector2(width/2, height/2);
 	}
 	
 	public static List<Vector2> validateFigure(List<Vector2> points){
-		
 		String moves = "";
 		boolean isValid = true;
 		List<Vector2> figureVertices = new ArrayList<Vector2>();
@@ -57,7 +53,7 @@ public class FigureUtils {
 				if(p1.y > maxY) maxY = p1.y;
 			}
 		}
-		System.out.println(moves);
+		
 		// Validate figure
 		if(moves.length() == 4 ){
 			if(moves.replaceAll("R", "").length() != 3)
@@ -76,7 +72,6 @@ public class FigureUtils {
 		if(isValid){
 			figureVertices.add(new Vector2(minX, maxY));
 			figureVertices.add(new Vector2(maxX, minY));
-			System.out.println(figureVertices);
 			return figureVertices;
 		}
 		
