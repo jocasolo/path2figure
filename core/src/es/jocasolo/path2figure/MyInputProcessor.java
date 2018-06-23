@@ -23,21 +23,6 @@ public class MyInputProcessor implements InputProcessor {
 	}
 	
 	@Override
-	public boolean keyDown(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int keycode) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char character) {
-		return false;
-	}
-
-	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		draggedPoints.clear();
 		screenPoints.clear();
@@ -52,12 +37,12 @@ public class MyInputProcessor implements InputProcessor {
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		System.out.println(draggedPoints.size());
-		// Validate figure
+		// Validate and create figure
 		if(!draggedPoints.isEmpty()) {
 			List<Vector2> figureVertices = FigureUtils.validateFigure(draggedPoints);
 			if(figureVertices != null){
 				final Vector2 data = FigureUtils.squareData(figureVertices);
-				builder.createDynamicSquare(0.5f, 0.5f, 0.5f, data.x, data.y, figureVertices.get(0).x+data.x/2, figureVertices.get(0).y-data.y/2, false);
+				builder.createDynamicSquare(0.5f, 0.5f, 0.5f, data.x, data.y, figureVertices.get(0).x+data.x, figureVertices.get(0).y-data.y, false);
 				draggedPoints.clear();
 			}
 		}
@@ -81,6 +66,21 @@ public class MyInputProcessor implements InputProcessor {
 			}
 			return true;
 		}
+		return false;
+	}
+	
+	@Override
+	public boolean keyDown(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyUp(int keycode) {
+		return false;
+	}
+
+	@Override
+	public boolean keyTyped(char character) {
 		return false;
 	}
 
