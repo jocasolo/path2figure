@@ -38,10 +38,13 @@ public class MyInputProcessor implements InputProcessor {
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		// Validate and create figure
 		if(!draggedPoints.isEmpty()) {
-			List<Vector2> figureVertices = FigureUtils.validateFigure(draggedPoints);
-			if(figureVertices != null){
-				final Vector2 data = FigureUtils.squareData(figureVertices);
-				builder.createDynamicSquare(0.5f, 0.5f, 0.5f, data.x, data.y, figureVertices.get(0).x+data.x, figureVertices.get(0).y-data.y, false);
+			Figure figure = FigureUtils.validateFigure(draggedPoints);
+			if(figure != null){
+				if(figure.getType() == Figure.Type.SQUARE)
+					builder.createDynamicSquare(0.5f, 0.5f, 0.5f, figure.getWidth()/2, figure.getHeight()/2, figure.getPosition().x, figure.getPosition().y, false);
+				else if (figure.getType() == Figure.Type.CIRCLE)
+					builder.createDynamicCircle(0.5f, 0.5f, 0.5f, figure.getRadius(), figure.getPosition().x, figure.getPosition().y, false);
+					
 				draggedPoints.clear();
 			}
 		}

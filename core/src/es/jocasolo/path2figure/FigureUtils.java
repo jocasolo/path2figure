@@ -1,24 +1,15 @@
 package es.jocasolo.path2figure;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
 public class FigureUtils {
 	
-	public static Vector2 squareData(List<Vector2> vertices){
-		float width = vertices.get(0).x - vertices.get(1).x;
-		float height = vertices.get(0).y - vertices.get(1).y;
-		if(width < 0) width *= -1;
-		if(height < 0) height *= -1;
-		return new Vector2(width/2, height/2);
-	}
-	
-	public static List<Vector2> validateFigure(List<Vector2> points){
+	public static Figure validateFigure(List<Vector2> points){
 		String moves = "";
 		boolean isValid = true;
-		List<Vector2> figureVertices = new ArrayList<Vector2>();
+		Figure.Type figureType = null;
 		
 		float maxX = points.get(0).x;
 		float maxY = points.get(0).y;
@@ -56,6 +47,8 @@ public class FigureUtils {
 		
 		// Validate figure
 		if(moves.length() == 4 ){
+			figureType = Figure.Type.SQUARE;
+			
 			if(moves.replaceAll("R", "").length() != 3)
 				isValid = false;
 			if(moves.replaceAll("L", "").length() != 3)
@@ -64,18 +57,39 @@ public class FigureUtils {
 				isValid = false;
 			if(moves.replaceAll("D", "").length() != 3)
 				isValid = false;
-		} else {
+			
+		} else if(moves.length() == 5) {
+			figureType = Figure.Type.CIRCLE;
+			
+			if(moves.charAt(0) == moves.charAt(4)){
+				String midCharacters = moves.substring(1, 3);
+				char firstCharacter = moves.charAt(0);
+				if(midCharacters.indexOf(firstCharacter) != -1)
+					isValid = false;
+				if(moves.charAt(1) == moves.charAt(2) || moves.charAt(1) == moves.charAt(3) || moves.charAt(2) == moves.charAt(3))
+					isValid = false;
+			}
+			
+		}else {
 			isValid = false;
 		}
 		
 		// Return figure vertices
-		if(isValid){
-			figureVertices.add(new Vector2(minX, maxY));
-			figureVertices.add(new Vector2(maxX, minY));
-			return figureVertices;
-		}
+		Figure figure = null;
+		if(isValid)
+			figure = generateFigure(new Vector2(minX, maxY), new Vector2(maxX, minY), figureType);
 		
-		return null;
+		return figure;
+	}
+	
+	private static Figure generateFigure(Vector2 v1, Vector2 v2, Figure.Type type){
+		Figure figure = new Figure();
+		figure.setType(type);
+		figure.setWidth(Math.abs(v1.x - v2.x));
+		figure.setHeight(Math.abs(v1.y - v2.y));
+		figure.setPosition(new Vector2(v1.x + figure.getWidth()/2, v1.y - figure.getHeight()/2));
+		//System.out.println(figure);
+		return figure;
 	}
 	
 }
